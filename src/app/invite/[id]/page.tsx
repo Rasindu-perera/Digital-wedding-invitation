@@ -123,7 +123,7 @@ export default async function InvitePage({
         {/* Masonry/Grid Gallery Layout */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
           <div className="col-span-2 md:col-span-1 rounded-t-full rounded-b-2xl overflow-hidden shadow-md h-64 md:h-80 border border-white/50">
-            <img src="/images/flower-4.jpeg" alt="Gallery 1" className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700" />
+            <img src="/images/flower-4.jpeg" alt="Gallery 1" className="w-full h-full object-cover object-[center_80%] hover:scale-105 transition-transform duration-700" />
           </div>
           <div className="col-span-1 rounded-[2rem] overflow-hidden shadow-md h-48 md:h-80 mt-0 md:mt-12 border border-white/50">
             <img src="/images/flower-2.jpeg" alt="Gallery 2" className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700" />
