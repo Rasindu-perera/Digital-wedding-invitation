@@ -39,3 +39,18 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Downloaded files
+*.pdf
+
+# Local data (Optional: Uncomment to ignore custom wedding settings)
+# src/data/settings.json

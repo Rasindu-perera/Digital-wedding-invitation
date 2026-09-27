@@ -12,6 +12,7 @@ datasource db {
 
 model Guest {
   id          String   @id @default(uuid())
+  salutation  String?
   guestName   String
   phoneNumber String
   isOpened    Boolean  @default(false)
