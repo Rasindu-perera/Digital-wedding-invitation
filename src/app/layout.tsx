@@ -6,8 +6,8 @@ const montserrat = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600"
 const greatVibes = Great_Vibes({ subsets: ["latin"], weight: ["400"] });
 
 export const metadata: Metadata = {
-  title: "Tanya's Mehndi",
-  description: "You are invited to Tanya's Mehndi.",
+  title: "Wedding Invitation",
+  description: "You are invited to our wedding!",
 };
 
 export default function RootLayout({
