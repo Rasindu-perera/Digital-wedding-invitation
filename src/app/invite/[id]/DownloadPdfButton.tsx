@@ -9,24 +9,37 @@ export default function DownloadPdfButton({ guest, settings }: { guest: any; set
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      // Dynamically import html2pdf to prevent SSR "self is not defined" error
+      // Dynamically import html2pdf
       const html2pdf = (await import('html2pdf.js')).default;
       
       const element = document.getElementById('pdf-template');
       if (!element) throw new Error("PDF template not found");
+
+      // Temporarily show the template off-screen so html2canvas can read it
+      element.style.display = 'block';
+      
+      // Wait a tick for the browser to calculate layout dimensions
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       const opt = {
         margin: 0,
         filename: `Invitation_${guest?.guestName?.replace(/\s+/g, '_') || 'Guest'}.pdf`,
         image: { type: 'jpeg' as const, quality: 1.0 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'px', format: [800, 1130] as [number, number], orientation: 'portrait' as const }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
       };
 
       await html2pdf().from(element).set(opt).save();
+      
+      // Hide it again
+      element.style.display = 'none';
     } catch (error) {
       console.error("Failed to generate PDF:", error);
       alert("There was an issue downloading the PDF. Please try again.");
+      
+      // Ensure it hides if it fails
+      const element = document.getElementById('pdf-template');
+      if (element) element.style.display = 'none';
     } finally {
       setDownloading(false);
     }
@@ -43,9 +56,8 @@ export default function DownloadPdfButton({ guest, settings }: { guest: any; set
         {downloading ? 'Generating PDF...' : 'Download Invitation'}
       </button>
 
-      {/* HIDDEN PDF TEMPLATE - Positioned behind everything so it renders its dimensions properly but is invisible to the user */}
-      <div id="pdf-template" style={{ width: '800px', height: '1130px', position: 'fixed', top: 0, left: 0, zIndex: -9999, pointerEvents: 'none' }} className="bg-[#f1efe9] font-sans overflow-hidden text-center">
-
+      {/* HIDDEN PDF TEMPLATE - Uses display:none natively, moved offscreen during generation */}
+      <div id="pdf-template" style={{ display: 'none', width: '794px', height: '1123px', position: 'absolute', top: '-20000px', left: '-20000px', zIndex: -9999, backgroundColor: '#f1efe9' }} className="font-sans overflow-hidden text-center">
         
         {/* Floral Corners */}
         <img src="/images/flower-1.jpeg" className="absolute -top-10 -right-10 w-[350px] object-contain mix-blend-multiply opacity-85 rotate-12" alt="Decoration" crossOrigin="anonymous" />
