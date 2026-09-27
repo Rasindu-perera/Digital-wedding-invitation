@@ -80,77 +80,6 @@ export default function AdminDashboard() {
     }
   };
 
-  const generatePDF = async (guestName: string, customSalutation: string) => {
-    const element = document.createElement('div');
-    element.innerHTML = `
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;500;600&display=swap');
-      </style>
-      <div style="width: 100%; height: 100%; padding: 20px; background-color: #fcf5f3; font-family: 'Montserrat', sans-serif; box-sizing: border-box; position: relative;">
-        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.4; background: radial-gradient(circle at 20% 30%, #ffe4e6 0%, transparent 50%), radial-gradient(circle at 80% 80%, #fff7ed 0%, transparent 50%); pointer-events: none;"></div>
-        
-        <div style="width: 100%; height: 100%; border: 1px solid #cda86b; position: relative; display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center; padding: 40px 20px; box-sizing: border-box; z-index: 10;">
-          
-          <div style="position: absolute; top: -2px; left: -2px; width: 30px; height: 30px; border-top: 2px solid #cda86b; border-left: 2px solid #cda86b;"></div>
-          <div style="position: absolute; top: -2px; right: -2px; width: 30px; height: 30px; border-top: 2px solid #cda86b; border-right: 2px solid #cda86b;"></div>
-          <div style="position: absolute; bottom: -2px; left: -2px; width: 30px; height: 30px; border-bottom: 2px solid #cda86b; border-left: 2px solid #cda86b;"></div>
-          <div style="position: absolute; bottom: -2px; right: -2px; width: 30px; height: 30px; border-bottom: 2px solid #cda86b; border-right: 2px solid #cda86b;"></div>
-
-          <div style="color: #b68c4a; margin-top: 20px;">
-            <p style="font-size: 10px; letter-spacing: 4px; text-transform: uppercase; margin: 0;">${settings.topText}</p>
-            <p style="font-size: 12px; font-style: italic; margin-top: 10px; opacity: 0.8;">${customSalutation} ${guestName},</p>
-          </div>
-
-          <div style="margin: 40px 0;">
-            <h1 style="font-family: 'Great Vibes', cursive; color: #b68c4a; font-size: 70px; line-height: 0.6; margin: 0; font-weight: normal; transform: rotate(-2deg);">${settings.brideName}</h1>
-            <h1 style="font-family: 'Great Vibes', cursive; color: #b68c4a; font-size: 50px; line-height: 0.6; margin: 15px 0; font-weight: normal; transform: rotate(-2deg);">&</h1>
-            <h1 style="font-family: 'Great Vibes', cursive; color: #b68c4a; font-size: 70px; line-height: 0.6; margin: 0 0 0 50px; font-weight: normal; transform: rotate(-2deg);">${settings.groomName}</h1>
-          </div>
-
-          <div style="color: #b68c4a; width: 100%;">
-            <div style="font-size: 10px; letter-spacing: 3px; text-transform: uppercase; border-bottom: 1px solid rgba(205, 168, 107, 0.3); padding-bottom: 15px; width: 70%; margin: 0 auto 20px auto; line-height: 1.8; white-space: pre-wrap;">
-              ${settings.midText}<br/><br/>
-              <span style="font-size: 12px;">${settings.dateText}</span>
-            </div>
-            
-            <div style="font-size: 13px; letter-spacing: 2px; line-height: 1.8;">
-              <p style="margin: 0;">${settings.timeText}</p>
-              <p style="margin: 0;">${settings.venueText}</p>
-              <p style="margin: 0;">${settings.addressText}</p>
-            </div>
-
-            <div style="font-size: 13px; letter-spacing: 2px; margin-top: 20px;">
-              ${settings.dressCode}
-            </div>
-
-            <div style="font-size: 10px; letter-spacing: 3px; text-transform: uppercase; margin-top: 30px;">
-              ${settings.rsvpText}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(element);
-    element.style.position = 'absolute';
-    element.style.left = '-9999px';
-    element.style.width = '794px'; 
-    element.style.height = '1123px';
-    
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    const opt = {
-      margin: 0,
-      filename: `Invitation_${guestName.replace(/\s+/g, '_')}.pdf`,
-      image: { type: 'jpeg' as const, quality: 1 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'px', format: [794, 1123] as [number, number], orientation: 'portrait' as const }
-    };
-
-    const html2pdf = (await import('html2pdf.js')).default;
-    await html2pdf().from(element).set(opt).save();
-    document.body.removeChild(element);
-  };
 
   const handleGenerateAndSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -161,8 +90,6 @@ export default function AdminDashboard() {
       const res = await axios.post('/api/guests', { guestName: name, phoneNumber: phone, salutation });
       const newGuest = res.data;
       const inviteUrl = `${window.location.origin}/invite/${newGuest.id}`;
-
-      await generatePDF(newGuest.guestName, newGuest.salutation || 'Dear');
 
       const message = `Hello ${newGuest.guestName}, we are delighted to invite you to our wedding! View your invitation here: ${inviteUrl}`;
       const whatsappUrl = `https://wa.me/${newGuest.phoneNumber}?text=${encodeURIComponent(message)}`;

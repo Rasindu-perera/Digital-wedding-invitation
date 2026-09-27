@@ -18,3 +18,17 @@ model Guest {
   isOpened    Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
+
+model Settings {
+  id          String @id @default("global") // We will only ever have one row
+  topText     String
+  brideName   String
+  groomName   String
+  midText     String
+  dateText    String
+  timeText    String
+  venueText   String
+  addressText String
+  dressCode   String
+  rsvpText    String
+}

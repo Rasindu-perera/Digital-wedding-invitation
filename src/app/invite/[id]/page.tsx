@@ -1,7 +1,5 @@
 import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
-import fs from 'fs';
-import path from 'path';
 import ReadTracker from './ReadTracker';
 import DownloadPdfButton from './DownloadPdfButton';
 
@@ -20,10 +18,26 @@ export default async function InvitePage({
     notFound();
   }
 
-  // Load dynamic settings
-  const settingsPath = path.join(process.cwd(), 'src', 'data', 'settings.json');
-  const settingsData = fs.readFileSync(settingsPath, 'utf8');
-  const settings = JSON.parse(settingsData);
+  // Load dynamic settings from Database
+  let settings = await prisma.settings.findUnique({
+    where: { id: 'global' },
+  });
+
+  if (!settings) {
+    settings = {
+      id: 'global',
+      topText: 'Together with their families',
+      brideName: 'Alex',
+      groomName: 'Sam',
+      midText: 'Joyfully invite you to their wedding celebration',
+      dateText: 'Saturday 12th December 2026',
+      timeText: '5pm Onwards',
+      venueText: 'The Grand Venue, City Center',
+      addressText: 'NJ, NY',
+      dressCode: 'Dress Code: Formal Attire',
+      rsvpText: 'RSVP by 1st November',
+    };
+  }
 
   return (
     <div className="min-h-screen bg-[#1c1917] flex flex-col items-center justify-center py-12 px-4 relative font-sans">
