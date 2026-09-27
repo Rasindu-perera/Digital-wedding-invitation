@@ -33,7 +33,7 @@ export default function AdminDashboard() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [salutation, setSalutation] = useState('Dear');
   const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState('+94');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
 
       fetchGuests();
       setName('');
-      setPhone('');
+      setPhone('+94');
       setSalutation('Dear');
     } catch (error) {
       console.error('Error generating invite:', error);
