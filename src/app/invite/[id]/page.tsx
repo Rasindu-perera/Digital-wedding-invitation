@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
 import ReadTracker from './ReadTracker';
 import DownloadPdfButton from './DownloadPdfButton';
+import FallingPetals from '@/components/FallingPetals';
 
 export default async function InvitePage({
   params,
@@ -42,6 +43,7 @@ export default async function InvitePage({
 
   return (
     <div className="min-h-screen bg-[#f1efe9] relative overflow-x-hidden font-sans pb-24">
+      <FallingPetals />
       <ReadTracker id={id} />
 
       {/* Background Texture (subtle white gradient to mimic silk/fabric) */}
