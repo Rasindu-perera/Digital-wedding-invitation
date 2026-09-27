@@ -34,6 +34,7 @@ export default async function InvitePage({
       timeText: '5pm Onwards',
       venueText: 'The Grand Venue, City Center',
       addressText: 'NJ, NY',
+      mapUrl: '',
       dressCode: 'Dress Code: Formal Attire',
       rsvpText: 'RSVP by 1st November',
     };
@@ -106,7 +107,13 @@ export default async function InvitePage({
             <div className="space-y-1 text-xs md:text-sm">
               <p className="tracking-widest">{settings.timeText}</p>
               <p className="tracking-widest">{settings.venueText}</p>
-              <p className="tracking-widest">{settings.addressText}</p>
+              {settings.mapUrl ? (
+                <a href={settings.mapUrl} target="_blank" rel="noopener noreferrer" className="tracking-widest hover:text-[#cda86b] underline decoration-[rgba(205,168,107,0.4)] underline-offset-4 transition-colors block">
+                  {settings.addressText}
+                </a>
+              ) : (
+                <p className="tracking-widest">{settings.addressText}</p>
+              )}
             </div>
 
             <div className="text-xs md:text-sm tracking-widest pt-2">

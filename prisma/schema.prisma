@@ -29,6 +29,7 @@ model Settings {
   timeText    String
   venueText   String
   addressText String
+  mapUrl      String   @default("")
   dressCode   String
   rsvpText    String
 }

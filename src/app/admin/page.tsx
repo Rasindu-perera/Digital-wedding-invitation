@@ -23,6 +23,7 @@ type WeddingSettings = {
   timeText: string;
   venueText: string;
   addressText: string;
+  mapUrl: string;
   dressCode: string;
   rsvpText: string;
 };
@@ -39,7 +40,7 @@ export default function AdminDashboard() {
   const [settings, setSettings] = useState<WeddingSettings>({
     topText: '', brideName: '', groomName: '', midText: '',
     dateText: '', timeText: '', venueText: '', addressText: '',
-    dressCode: '', rsvpText: ''
+    mapUrl: '', dressCode: '', rsvpText: ''
   });
   const [savingSettings, setSavingSettings] = useState(false);
 
@@ -192,6 +193,11 @@ export default function AdminDashboard() {
                   <label className="block text-sm font-medium text-gray-700 mb-1">City/State/Address</label>
                   <input type="text" value={settings.addressText} onChange={e => setSettings({...settings, addressText: e.target.value})} className="w-full rounded-lg border border-gray-300 bg-white text-gray-900 px-4 py-2 focus:ring-2 focus:ring-amber-500 outline-none" required />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Google Maps URL (Optional)</label>
+                <input type="url" value={settings.mapUrl} onChange={e => setSettings({...settings, mapUrl: e.target.value})} placeholder="https://goo.gl/maps/..." className="w-full rounded-lg border border-gray-300 bg-white text-gray-900 px-4 py-2 focus:ring-2 focus:ring-amber-500 outline-none" />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

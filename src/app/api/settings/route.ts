@@ -11,6 +11,7 @@ const defaultSettings = {
   timeText: '5pm Onwards',
   venueText: 'The Grand Venue, City Center',
   addressText: 'NJ, NY',
+  mapUrl: '',
   dressCode: 'Dress Code: Formal Attire',
   rsvpText: 'RSVP by 1st November',
 };
