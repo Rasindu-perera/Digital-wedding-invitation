@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Download, Loader2 } from 'lucide-react';
 
-export default function DownloadPdfButton({ guestName }: { guestName: string }) {
+export default function DownloadPdfButton({ guest, settings }: { guest: any; settings: any }) {
   const [downloading, setDownloading] = useState(false);
 
   const handleDownload = async () => {
@@ -12,18 +12,24 @@ export default function DownloadPdfButton({ guestName }: { guestName: string }) 
       // Dynamically import html2pdf to prevent SSR "self is not defined" error
       const html2pdf = (await import('html2pdf.js')).default;
       
-      const element = document.getElementById('invitation-card');
-      if (!element) throw new Error("Invitation card not found");
+      const element = document.getElementById('pdf-template');
+      if (!element) throw new Error("PDF template not found");
+
+      // Temporarily show the template so html2canvas can read it properly
+      element.style.display = 'block';
 
       const opt = {
         margin: 0,
-        filename: `Invitation_${guestName.replace(/\s+/g, '_')}.pdf`,
-        image: { type: 'jpeg' as const, quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
+        filename: `Invitation_${guest.guestName.replace(/\s+/g, '_')}.pdf`,
+        image: { type: 'jpeg' as const, quality: 1.0 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
         jsPDF: { unit: 'px', format: [element.offsetWidth, element.offsetHeight] as [number, number], orientation: 'portrait' as const }
       };
 
       await html2pdf().from(element).set(opt).save();
+      
+      // Hide it again
+      element.style.display = 'none';
     } catch (error) {
       console.error("Failed to generate PDF:", error);
       alert("There was an issue downloading the PDF. Please try again.");
@@ -33,13 +39,69 @@ export default function DownloadPdfButton({ guestName }: { guestName: string }) 
   };
 
   return (
-    <button
-      onClick={handleDownload}
-      disabled={downloading}
-      className="mt-8 flex items-center justify-center gap-2 bg-[#b68c4a] hover:bg-[#a07a3c] text-white px-6 py-3 rounded-full font-sans tracking-wide transition shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
-    >
-      {downloading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Download className="w-5 h-5" />}
-      {downloading ? 'Generating PDF...' : 'Download Invitation as PDF'}
-    </button>
+    <>
+      <button
+        onClick={handleDownload}
+        disabled={downloading}
+        className="mt-8 flex items-center justify-center gap-2 bg-[#828b7a] hover:bg-[#6e7766] text-white px-6 py-3 rounded-full font-sans tracking-widest text-xs uppercase shadow-[0_10px_20px_rgba(0,0,0,0.15)] transition disabled:opacity-70 disabled:cursor-not-allowed border border-white/30 backdrop-blur-md"
+      >
+        {downloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+        {downloading ? 'Generating PDF...' : 'Download Invitation'}
+      </button>
+
+      {/* HIDDEN PDF TEMPLATE */}
+      <div id="pdf-template" style={{ display: 'none', width: '800px', height: '1130px', position: 'absolute', top: '-10000px', left: '-10000px' }} className="bg-[#f1efe9] font-sans relative overflow-hidden text-center z-[-100]">
+        
+        {/* Floral Corners */}
+        <img src="/images/flower-1.jpeg" className="absolute -top-10 -right-10 w-[350px] object-contain mix-blend-multiply opacity-85 rotate-12" alt="Decoration" crossOrigin="anonymous" />
+        <img src="/images/flower-3.jpeg" className="absolute -bottom-10 -left-10 w-[400px] object-contain mix-blend-multiply opacity-75 -rotate-45" alt="Decoration" crossOrigin="anonymous" />
+
+        {/* Content Box */}
+        <div className="absolute inset-10 border-2 border-[#828b7a]/30 rounded-3xl flex flex-col items-center justify-center p-12">
+          
+          <p className="tracking-[0.3em] text-[#7a7a72] text-sm uppercase mb-12">{settings.topText}</p>
+          
+          <div className="flex flex-col items-center justify-center">
+            <h1 className="text-[7rem] text-[#3d4c38] font-serif uppercase tracking-widest font-normal leading-none">
+              {settings.brideName}
+            </h1>
+            <span className="font-script text-[#c49a45] text-[5rem] -rotate-2 my-2 z-10">
+              and
+            </span>
+            <h1 className="text-[7rem] text-[#3d4c38] font-serif uppercase tracking-widest font-normal leading-none">
+              {settings.groomName}
+            </h1>
+          </div>
+
+          <p className="tracking-[0.25em] text-[#7a7a72] text-sm uppercase max-w-lg leading-relaxed mt-12 mb-16">
+            {settings.midText}
+          </p>
+
+          <div className="bg-[#edebe4] rounded-t-[100px] rounded-b-3xl p-10 shadow-lg border border-white w-[500px] flex flex-col items-center relative z-10">
+            <p className="tracking-[0.2em] text-[#6b7265] text-sm uppercase mb-6 font-semibold">{settings.dateText}</p>
+            
+            <div className="w-16 h-16 rounded-full bg-[#828b7a] flex items-center justify-center shadow-inner mb-6 text-[#edebe4] border border-[#3d4c38]/20">
+               <span className="font-serif italic text-2xl">
+                 {settings.brideName.charAt(0)}&{settings.groomName.charAt(0)}
+               </span>
+            </div>
+
+            <p className="text-xl text-[#3d4c38] font-serif mb-4">{settings.timeText}</p>
+            
+            <div className="text-xs text-[#7a7a72] uppercase tracking-[0.2em] leading-loose">
+              <p className="font-semibold text-[#3d4c38] mb-1">{settings.venueText}</p>
+              <p>{settings.addressText}</p>
+            </div>
+          </div>
+
+          {guest.guestName && (
+            <div className="mt-12 py-3 px-10 rounded-full bg-[#828b7a] text-white tracking-[0.25em] text-sm uppercase shadow-sm">
+              {guest.salutation || 'Dear'} {guest.guestName}, YOU'RE INVITED ♡
+            </div>
+          )}
+
+        </div>
+      </div>
+    </>
   );
 }
