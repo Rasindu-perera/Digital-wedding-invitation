@@ -25,7 +25,7 @@ export default function DownloadPdfButton({ guest, settings }: { guest: any; set
         margin: 0,
         filename: `Invitation_${guest?.guestName?.replace(/\s+/g, '_') || 'Guest'}.pdf`,
         image: { type: 'jpeg' as const, quality: 1.0 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
+        html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0, scrollX: 0, windowWidth: 800, windowHeight: 1123 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
       };
 
@@ -56,12 +56,12 @@ export default function DownloadPdfButton({ guest, settings }: { guest: any; set
         {downloading ? 'Generating PDF...' : 'Download Invitation'}
       </button>
 
-      {/* HIDDEN PDF TEMPLATE - Uses display:none natively, moved offscreen during generation */}
-      <div id="pdf-template" style={{ display: 'none', width: '794px', height: '1123px', position: 'absolute', top: '-20000px', left: '-20000px', zIndex: -9999, backgroundColor: '#f1efe9' }} className="font-sans overflow-hidden text-center">
+      {/* HIDDEN PDF TEMPLATE - Uses display:none natively, moved to fixed background during generation */}
+      <div id="pdf-template" style={{ display: 'none', width: '794px', height: '1123px', position: 'fixed', top: '0px', left: '0px', zIndex: -9999, backgroundColor: '#f1efe9' }} className="font-sans overflow-hidden text-center">
         
         {/* Floral Corners */}
-        <img src="/images/flower-1.jpeg" className="absolute -top-10 -right-10 w-[350px] object-contain mix-blend-multiply opacity-85 rotate-12" alt="Decoration" crossOrigin="anonymous" />
-        <img src="/images/flower-3.jpeg" className="absolute -bottom-10 -left-10 w-[400px] object-contain mix-blend-multiply opacity-75 -rotate-45" alt="Decoration" crossOrigin="anonymous" />
+        <img src="/images/flower-1.jpeg" className="absolute -top-10 -right-10 w-[350px] object-contain opacity-85 rotate-12" alt="Decoration" />
+        <img src="/images/flower-3.jpeg" className="absolute -bottom-10 -left-10 w-[400px] object-contain opacity-75 -rotate-45" alt="Decoration" />
 
         {/* Content Box */}
         <div className="absolute inset-10 border-2 border-[#828b7a]/30 rounded-3xl flex flex-col items-center justify-center p-12">
