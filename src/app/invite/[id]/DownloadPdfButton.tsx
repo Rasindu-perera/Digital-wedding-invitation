@@ -15,21 +15,15 @@ export default function DownloadPdfButton({ guest, settings }: { guest: any; set
       const element = document.getElementById('pdf-template');
       if (!element) throw new Error("PDF template not found");
 
-      // Temporarily show the template so html2canvas can read it properly
-      element.style.display = 'block';
-
       const opt = {
         margin: 0,
-        filename: `Invitation_${guest.guestName.replace(/\s+/g, '_')}.pdf`,
+        filename: `Invitation_${guest?.guestName?.replace(/\s+/g, '_') || 'Guest'}.pdf`,
         image: { type: 'jpeg' as const, quality: 1.0 },
         html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'px', format: [element.offsetWidth, element.offsetHeight] as [number, number], orientation: 'portrait' as const }
+        jsPDF: { unit: 'px', format: [800, 1130], orientation: 'portrait' as const }
       };
 
       await html2pdf().from(element).set(opt).save();
-      
-      // Hide it again
-      element.style.display = 'none';
     } catch (error) {
       console.error("Failed to generate PDF:", error);
       alert("There was an issue downloading the PDF. Please try again.");
@@ -49,8 +43,9 @@ export default function DownloadPdfButton({ guest, settings }: { guest: any; set
         {downloading ? 'Generating PDF...' : 'Download Invitation'}
       </button>
 
-      {/* HIDDEN PDF TEMPLATE */}
-      <div id="pdf-template" style={{ display: 'none', width: '800px', height: '1130px', position: 'absolute', top: '-10000px', left: '-10000px' }} className="bg-[#f1efe9] font-sans relative overflow-hidden text-center z-[-100]">
+      {/* HIDDEN PDF TEMPLATE - Positioned behind everything so it renders its dimensions properly but is invisible to the user */}
+      <div id="pdf-template" style={{ width: '800px', height: '1130px', position: 'fixed', top: 0, left: 0, zIndex: -9999, pointerEvents: 'none' }} className="bg-[#f1efe9] font-sans overflow-hidden text-center">
+
         
         {/* Floral Corners */}
         <img src="/images/flower-1.jpeg" className="absolute -top-10 -right-10 w-[350px] object-contain mix-blend-multiply opacity-85 rotate-12" alt="Decoration" crossOrigin="anonymous" />
