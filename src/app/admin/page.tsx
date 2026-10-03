@@ -11,6 +11,8 @@ type Guest = {
   guestName: string;
   phoneNumber: string;
   isOpened: boolean;
+  rsvpStatus: string;
+  guestCount: number;
   createdAt: string;
 };
 
@@ -274,6 +276,26 @@ export default function AdminDashboard() {
               </form>
             </div>
 
+            {/* Summary Cards */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-amber-100 flex flex-col items-center">
+                <span className="text-3xl font-bold text-amber-900">{guests.length}</span>
+                <span className="text-sm text-gray-500 uppercase tracking-wider">Total Sent</span>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-amber-100 flex flex-col items-center">
+                <span className="text-3xl font-bold text-blue-600">{guests.filter(g => g.isOpened).length}</span>
+                <span className="text-sm text-gray-500 uppercase tracking-wider">Opened</span>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-amber-100 flex flex-col items-center">
+                <span className="text-3xl font-bold text-green-600">{guests.filter(g => g.rsvpStatus === 'Attending').length}</span>
+                <span className="text-sm text-gray-500 uppercase tracking-wider">Attending</span>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-amber-100 flex flex-col items-center">
+                <span className="text-3xl font-bold text-emerald-700">{guests.filter(g => g.rsvpStatus === 'Attending').reduce((acc, g) => acc + (g.guestCount || 1), 0)}</span>
+                <span className="text-sm text-gray-500 uppercase tracking-wider">Headcount</span>
+              </div>
+            </div>
+
             {/* Table Section */}
             <div className="bg-white rounded-2xl shadow-sm border border-amber-100 overflow-hidden">
               <div className="p-6 border-b border-gray-100 flex justify-between items-center">
@@ -289,6 +311,8 @@ export default function AdminDashboard() {
                       <th className="p-4 font-medium border-b border-amber-100">Guest Name</th>
                       <th className="p-4 font-medium border-b border-amber-100">Phone Number</th>
                       <th className="p-4 font-medium border-b border-amber-100">Status</th>
+                      <th className="p-4 font-medium border-b border-amber-100">RSVP</th>
+                      <th className="p-4 font-medium border-b border-amber-100 text-center">Guests</th>
                       <th className="p-4 font-medium border-b border-amber-100">Actions</th>
                     </tr>
                   </thead>
@@ -307,6 +331,14 @@ export default function AdminDashboard() {
                               Sent
                             </span>
                           )}
+                        </td>
+                        <td className="p-4">
+                          {guest.rsvpStatus === 'Attending' && <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Attending</span>}
+                          {guest.rsvpStatus === 'Declined' && <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Declined</span>}
+                          {(!guest.rsvpStatus || guest.rsvpStatus === 'Pending') && <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Pending</span>}
+                        </td>
+                        <td className="p-4 text-center text-gray-800">
+                          {guest.rsvpStatus === 'Attending' ? guest.guestCount : '-'}
                         </td>
                         <td className="p-4">
                           <div className="flex gap-3">
@@ -333,7 +365,7 @@ export default function AdminDashboard() {
                     ))}
                     {guests.length === 0 && (
                       <tr>
-                        <td colSpan={4} className="p-8 text-center text-gray-500">
+                        <td colSpan={6} className="p-8 text-center text-gray-500">
                           No invitations generated yet.
                         </td>
                       </tr>

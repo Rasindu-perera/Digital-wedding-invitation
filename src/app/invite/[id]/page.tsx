@@ -3,6 +3,8 @@ import prisma from '@/lib/prisma';
 import DownloadPdfButton from './DownloadPdfButton';
 import FallingPetals from '@/components/FallingPetals';
 import EnvelopeWrapper from './EnvelopeWrapper';
+import CountdownTimer from './CountdownTimer';
+import RsvpForm from './RsvpForm';
 
 export default async function InvitePage({
   params,
@@ -50,7 +52,7 @@ export default async function InvitePage({
         <div className="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-white/60 via-white/20 to-transparent"></div>
 
         {/* HERO SECTION */}
-        <section className="relative w-full min-h-screen flex flex-col xl:flex-row items-center justify-center p-4 sm:p-8 z-10">
+        <section id="invitation-card" className="relative w-full min-h-screen flex flex-col xl:flex-row items-center justify-center p-4 sm:p-8 z-10 bg-[#f1efe9]">
           {/* Left Column: Typography */}
           <div className="w-full xl:w-1/2 flex flex-col items-center justify-center text-center space-y-6 sm:space-y-10 py-12 xl:py-0">
             <p className="tracking-[0.25em] text-[#7a7a72] text-[10px] sm:text-xs uppercase">{settings.topText}</p>
@@ -112,6 +114,11 @@ export default async function InvitePage({
           </div>
         </section>
 
+        {/* COUNTDOWN SECTION */}
+        <section className="relative w-full max-w-4xl mx-auto px-4 sm:px-8 py-10 z-10">
+          <CountdownTimer />
+        </section>
+
         {/* GALLERY SECTION */}
         <section className="relative w-full max-w-6xl mx-auto px-4 sm:px-8 py-20 z-10">
           <div className="text-center mb-12">
@@ -132,6 +139,11 @@ export default async function InvitePage({
               <img src="/images/flower-5.jpeg" alt="Gallery 3" className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-700" />
             </div>
           </div>
+        </section>
+
+        {/* RSVP SECTION */}
+        <section className="relative w-full max-w-4xl mx-auto px-4 sm:px-8 py-20 z-10 mb-20">
+          <RsvpForm guestId={id} initialStatus={guest.rsvpStatus} initialCount={guest.guestCount} />
         </section>
 
         {/* Floating Download PDF Button */}

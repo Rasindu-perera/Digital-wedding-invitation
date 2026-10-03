@@ -16,6 +16,8 @@ model Guest {
   guestName   String
   phoneNumber String
   isOpened    Boolean  @default(false)
+  rsvpStatus  String   @default("Pending")
+  guestCount  Int      @default(1)
   createdAt   DateTime @default(now())
 }
 
