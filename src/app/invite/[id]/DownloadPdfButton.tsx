@@ -18,14 +18,14 @@ export default function DownloadPdfButton({ guest, settings }: { guest: any; set
       const opt = {
         margin: 0,
         filename: `Invitation_${guest?.guestName?.replace(/\s+/g, '_') || 'Guest'}.pdf`,
-        image: { type: 'jpeg', quality: 1.0 },
+        image: { type: 'jpeg' as const, quality: 1.0 },
         html2canvas: { 
           scale: 2, 
           useCORS: true, 
           backgroundColor: '#ffffff',
           logging: false
         },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm' as const, format: 'a4' as const, orientation: 'portrait' as const }
       };
 
       await html2pdf().from(element).set(opt).save();
