@@ -116,7 +116,7 @@ export default async function InvitePage({
 
         {/* COUNTDOWN SECTION */}
         <section className="relative w-full max-w-4xl mx-auto px-4 sm:px-8 py-10 z-10">
-          <CountdownTimer />
+          <CountdownTimer targetDate={settings.dateText} targetTime={settings.timeText} />
         </section>
 
         {/* GALLERY SECTION */}
